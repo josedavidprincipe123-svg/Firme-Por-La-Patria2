@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apoyo Tigre Abelardo</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:black;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            padding:20px;
+        }
+
+        .container{
+            position:relative;
+            width:100%;
+            max-width:500px;
+        }
+
+        /* Imagen */
+        .fondo{
+            width:100%;
+            display:block;
+        }
+
+        /* Campo nombre (posición visual correcta) */
+        .nombre-box{
+            position:absolute;
+            top: 165px;   /* DEBAJO de "Yo," */
+            left:50%;
+            transform:translateX(-50%);
+            width:240px;
+            text-align:center;
+            background:transparent;
+        }
+
+        .nombre-box input{
+            width:100%;
+            border:none;
+            outline:none;
+            background:transparent;
+            color:white;
+            font-size:30px;
+            font-weight:900;
+            text-align:center;
+            text-transform:uppercase;
+            letter-spacing:1px;
+        }
+
+        .nombre-box input::placeholder{
+            color:rgba(255,255,255,0.7);
+        }
+
+        /* Botón */
+        .guardar-btn{
+            position:absolute;
+            bottom:20px;
+            left:50%;
+            transform:translateX(-50%);
+            padding:12px 25px;
+            border:none;
+            border-radius:10px;
+            background:#fcd116;
+            color:black;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        /* Responsive */
+        @media(max-width:600px){
+            .nombre-box{
+                top:210px;
+                width:190px;
+            }
+
+            .nombre-box input{
+                font-size:24px;
+            }
+
+            .guardar-btn{
+                font-size:15px;
+                padding:10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="imagen.jpg" class="fondo" id="imagen">
+
+    <div class="nombre-box">
+        <input type="text" id="nombre" placeholder="TU NOMBRE">
+    </div>
+
+    <button id="guardarBtn" class="guardar-btn">Guardar Foto</button>
+</div>
+
+<script>
+const nombreInput = document.getElementById("nombre");
+const guardarBtn = document.getElementById("guardarBtn");
+const imagen = document.getElementById("imagen");
+
+nombreInput.addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        guardarImagen();
+    }
+});
+
+guardarBtn.addEventListener("click", guardarImagen);
+
+function guardarImagen(){
+
+    let nombre = nombreInput.value.trim();
+
+    if(nombre === ""){
+        alert("Escribe tu nombre");
+        return;
+    }
+
+    nombre = nombre.toUpperCase();
+    nombreInput.value = nombre;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = imagen.naturalWidth;
+    canvas.height = imagen.naturalHeight;
+
+    // Dibujar imagen
+    ctx.drawImage(imagen, 0, 0);
+
+    // Texto
+    ctx.fillStyle = "white";
+    ctx.font = "900 60px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // POSICIÓN EXACTA debajo de "Yo,"
+    const x = canvas.width / 2;
+    const y = 425;
+
+    ctx.fillText(nombre, x, y);
+
+    // Descargar
+    const link = document.createElement("a");
+    link.download = nombre + ".png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    // limpiar
+    nombreInput.value = "";
+}
+</script>
+
+</body>
+</html>
